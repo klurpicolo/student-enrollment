@@ -13,3 +13,7 @@ class Student:
         self.id = id
         self.email = email
         self.password = password
+
+
+class Subject:
+    pass
