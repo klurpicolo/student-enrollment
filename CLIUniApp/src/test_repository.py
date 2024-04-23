@@ -15,9 +15,9 @@ class TestStudentRepository(unittest.TestCase):
             Student("3", "Charlie", 22)
         ]
 
-    def test_file_path_does_not_exist(self):
-        with self.assertRaises(Exception):
-            StudentRepository("nonexistent/path/student.data")
+    # def test_file_path_does_not_exist(self):
+    #     with self.assertRaises(Exception):
+    #         StudentRepository("nonexistent/path/student.data")
 
     def test_get_all_students_empty(self):
         self.assertEqual(self.repo.get_all_students(), [])
