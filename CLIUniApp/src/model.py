@@ -53,6 +53,9 @@ class Subject:
         return self.id == other.id and self.mark == other.mark and self.grade == other.grade
 
 class Admin:
+    """
+    Represent Admin
+    """
 
     def __init__(self, id: str, name: str):
         self.id = id
