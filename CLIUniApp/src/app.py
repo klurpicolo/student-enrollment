@@ -1,6 +1,9 @@
 from repository import StudentRepository
-import model
-from view import UniversityView, StudentLoginView, StudentView, AdminView
+from admin_view import AdminView
+from student_login_view import StudentLoginView
+from student_view import StudentView
+from university_view import UniversityView
+
 import os
 
 
