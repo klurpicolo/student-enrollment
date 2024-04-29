@@ -22,7 +22,7 @@ class StudentRepository:
         """
         return self.students
 
-    def add_student(self, student: dict) -> bool:
+    def add_student(self, student: Student) -> bool:
         """
         Add student to the file. Return True if success else False
         """
@@ -47,7 +47,19 @@ class StudentRepository:
                 self.students.remove(student)
                 return True
         return False
-        
+    
+    def update_student(self, to_update: Student) -> bool:
+        """
+        Update student by check if id match existing student
+        """
+        existing_student = self.get_student_by_id(to_update.id)
+        if existing_student is not None:
+            existing_student.name = existing_student.name
+            existing_student.email = existing_student.email
+            existing_student.enrol_subjects = to_update.enrol_subjects
+            return True
+        else:
+            return False
 
 if __name__ == "__main__":
     repo =  StudentRepository(os.getcwd() + '/CLIUniApp/src/data/student.data')

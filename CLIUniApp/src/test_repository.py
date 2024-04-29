@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from model import Student
+from model import Student, Subject
 from repository import StudentRepository
 
 class TestStudentRepository(unittest.TestCase):
@@ -41,6 +41,21 @@ class TestStudentRepository(unittest.TestCase):
 
     def test_remove_student_not_found(self):
         self.assertFalse(self.repo.remove_student("nonexistent_id"))
+
+    def test_update_existing_student_found(self):
+        student = Student("klur", "klur@gmail.com", "12345")
+        student_id = student.id
+
+        updated_student = Student("klur", "klur@gmail.com", "12345")
+        updated_student.id = student_id
+        updated_student.enrol_subjects.append(Subject())
+
+        self.repo.add_student(student)
+        self.assertTrue(self.repo.update_student(updated_student))
+
+        retrieved_student = self.repo.get_student_by_id(student_id)
+        self.assertEqual(len(retrieved_student.enrol_subjects), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
