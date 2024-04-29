@@ -38,7 +38,7 @@ class Subject:
         self.mark = self.generate_mark()
         self.grade = Grade.from_mark(self.mark)
 
-    def generate_id(self) -> int:
+    def generate_id(self) -> str:
         digits = random.randint(1,999)
         with_leading_zero = str(digits).zfill(3)
         return with_leading_zero
@@ -51,6 +51,9 @@ class Subject:
         if not isinstance(other, Subject):
             return False
         return self.id == other.id and self.mark == other.mark and self.grade == other.grade
+    
+    def __str__(self) -> str:
+        return f'Subject::{self.id} -- mark = {self.mark} -- grade = {self.grade}'
 
 class Admin:
     """
@@ -74,7 +77,7 @@ class Student:
         self.name = name
         self.email = email
         self.password = password
-        self.enrol_subjects: list[Subject] = []
+        self.enrolled_subjects: list[Subject] = []
 
     def generate_id(self):
         digits = random.randint(1, 999999)
