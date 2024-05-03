@@ -14,8 +14,8 @@ class UniversityView(BaseView):
     hint = """
     University main menu
     Please select the following option
-    - (a) Login
-    - (s) Register
+    - (a) Admin
+    - (s) Student
     - (X) Log out
     """
 

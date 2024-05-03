@@ -1,0 +1,22 @@
+[
+    {
+        "id": "1",
+        "name": "Alice",
+        "password": "aaaa",
+        "email": "alice@example.com",
+        "enrolled_subjects": [
+            {
+                "id": "123",
+                "mark": 50,
+                "grade": "P"
+            }
+        ]
+    },
+    {
+        "id": "217953",
+        "name": "Klur",
+        "email": "wb@gmail.com",
+        "password": "qwert",
+        "enrolled_subjects": []
+    }
+]

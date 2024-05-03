@@ -4,16 +4,21 @@ import os
 from model import Student, Subject
 from repository import StudentRepository
 
+
 class TestStudentRepository(unittest.TestCase):
 
     def setUp(self):
-        self.data_file = "./data/student.data"
+        self.data_file = os.getcwd() + '/data/test_student.data'
         self.repo = StudentRepository(self.data_file)
         self.sample_students = [
-            Student("1", "Alice", 20),
-            Student("2", "Bob", 21),
-            Student("3", "Charlie", 22)
+            Student("1", "Alice", "aaa"),
+            Student("2", "Bob", "bbb"),
+            Student("3", "Charlie", "ccc")
         ]
+
+    def tearDown(self):
+        # Clear data after each test
+        self.repo.clean_database()
 
     # def test_file_path_does_not_exist(self):
     #     with self.assertRaises(Exception):
@@ -48,13 +53,13 @@ class TestStudentRepository(unittest.TestCase):
 
         updated_student = Student("klur", "klur@gmail.com", "12345")
         updated_student.id = student_id
-        updated_student.enrol_subjects.append(Subject())
+        updated_student.enrolled_subjects.append(Subject())
 
         self.repo.add_student(student)
         self.assertTrue(self.repo.update_student(updated_student))
 
         retrieved_student = self.repo.get_student_by_id(student_id)
-        self.assertEqual(len(retrieved_student.enrol_subjects), 1)
+        self.assertEqual(len(retrieved_student.enrolled_subjects), 1)
 
 
 if __name__ == '__main__':

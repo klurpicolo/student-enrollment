@@ -2,66 +2,63 @@ import json
 from model import Student
 import os
 
-class StudentRepository:
-    """
-    Klur's Note: This is not proper implementation yet, just for you guys to development on view first.
-    """
 
+class StudentRepository:
     def __init__(self, file_path):
         self.file_path = file_path
-        # self.check_file_path(file_path)
-        self.students: list[Student] = []
 
-    def check_file_path(self, file_path: str):
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f'File path {file_path} does not exist')
+    def load_students(self):
+        if os.path.exists(self.file_path):
+            with open(self.file_path, 'r') as file:
+                return json.load(file)
+        return []
+
+    def save_students(self, students):
+        with open(self.file_path, 'w') as file:
+            json.dump(students, file, indent=4)
 
     def get_all_students(self) -> list[Student]:
-        """
-        Return all student data.
-        """
-        return self.students
+        return [Student.deserialize(student_dict) for student_dict in self.load_students()]
 
-    def add_student(self, student: Student) -> bool:
-        """
-        Add student to the file. Return True if success else False
-        """
-        self.students.append(student)
+    def add_student(self, to_add):
+        students = self.load_students()
+        students.append(to_add.to_json())
+        self.save_students(students)
         return True
 
-    def get_student_by_id(self, student_id: str) -> Student | None:
-        """
-        Return student given student id if exists else None.
-        """
-        for student in self.students:
+    def get_student_by_id(self, student_id):
+        students = self.load_students()
+        for student_dict in students:
+            student = Student.deserialize(student_dict)
             if student.id == student_id:
                 return student
         return None
 
-    def remove_student(self, student_id: str) -> bool:
-        """
-        Remove student from the file. Return True if success else False.
-        """
-        for student in self.students:
+    def remove_student(self, student_id):
+        students = self.load_students()
+        for student_dict in students:
+            student = Student.deserialize(student_dict)
             if student.id == student_id:
-                self.students.remove(student)
+                students.remove(student_dict)
+                self.save_students(students)
                 return True
         return False
-    
-    def update_student(self, to_update: Student) -> bool:
-        """
-        Update student by check if id match existing student
-        """
-        existing_student = self.get_student_by_id(to_update.id)
-        if existing_student is not None:
-            existing_student.name = existing_student.name
-            existing_student.email = existing_student.email
-            existing_student.enrol_subjects = to_update.enrol_subjects
-            return True
-        else:
-            return False
+
+    def update_student(self, to_update):
+        students = self.load_students()
+        for i, student_dict in enumerate(students):
+            student = Student.deserialize(student_dict)
+            if student.id == to_update.id:
+                students[i] = to_update.to_json()
+                self.save_students(students)
+                return True
+        return False
+
+    def clean_database(self):
+        self.save_students([])
+
 
 if __name__ == "__main__":
-    repo =  StudentRepository(os.getcwd() + '/CLIUniApp/src/data/student.data')
-    student = Student("Klur", "wb@gmail.com", "qwert")
-    print(repo.add_student(student))
+    repo = StudentRepository(os.getcwd() + '/data/student.data')
+    klur = Student("Klur", "wb@gmail.com", "qwert")
+    print(repo.add_student(klur))

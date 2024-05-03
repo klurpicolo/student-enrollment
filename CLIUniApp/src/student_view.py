@@ -100,7 +100,7 @@ class StudentView(BaseView):
         student.student_password = new_password
         print("Password change successful.")
 
-    def exit():
+    def exit(self):
         pass
 
 
