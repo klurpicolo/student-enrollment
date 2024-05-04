@@ -20,9 +20,9 @@ class StudentLoginView(BaseView):
 
     hint = """
     Please select the following option
-    - (L) Login
-    - (R) Register
-    - (X) Log out
+    - (l) Login
+    - (r) Register
+    - (x) Log out
     """
 
     def menu(self):
@@ -30,11 +30,11 @@ class StudentLoginView(BaseView):
         while True:
             choice = input("Please enter the following choice(L, R, X): ")
             match choice:
-                case "L":
+                case "l":
                     self.login()
-                case "R":
+                case "r":
                     self.register()
-                case "X":
+                case "x":
                     self.logout()
                 case _:
                     print(f"The choice {choice} is not one of (L, R, X). Please select a new valid choice.")

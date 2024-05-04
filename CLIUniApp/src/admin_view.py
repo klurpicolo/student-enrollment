@@ -34,17 +34,17 @@ class AdminView(BaseView):
                 self.logout()
         pass
 
-    def viewStudentsByGrade():
+    def viewStudentsByGrade(self):
         pass
 
-    def filterByPassFail():
+    def filterByPassFail(self):
         pass
 
-    def viewRegisteredStudents():
+    def viewRegisteredStudents(self):
         pass
 
-    def removeStudent():
+    def removeStudent(self):
         pass
 
-    def clearStudentDataStore():
+    def clearStudentDataStore(self):
         pass
