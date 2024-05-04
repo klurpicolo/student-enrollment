@@ -1,5 +1,6 @@
 import unittest
 import os
+import json
 
 from model import Student, Subject
 from repository import StudentRepository
@@ -20,9 +21,16 @@ class TestStudentRepository(unittest.TestCase):
         # Clear data after each test
         self.repo.clean_database()
 
-    # def test_file_path_does_not_exist(self):
-    #     with self.assertRaises(Exception):
-    #         StudentRepository("nonexistent/path/student.data")
+    def test_create_repository_without_file(self):
+        temp_file_path = os.getcwd() + '/data/test_student_tmp.data'
+        new_repo = StudentRepository(temp_file_path)
+        self.assertTrue(os.path.exists(temp_file_path), 'No file created')
+        self.assertEqual(new_repo.get_all_students(), [])
+        with open(temp_file_path, 'r') as file:
+            data = json.load(file)
+            self.assertEqual(data, [], 'Repository not initialized with empty list')
+        # Delete the temporary file after the test
+        os.remove(temp_file_path)
 
     def test_get_all_students_empty(self):
         self.assertEqual(self.repo.get_all_students(), [])

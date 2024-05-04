@@ -6,12 +6,15 @@ import os
 class StudentRepository:
     def __init__(self, file_path):
         self.file_path = file_path
+        if not os.path.exists(self.file_path):
+            with open(self.file_path, 'w+') as file:
+                json.dump([], file, indent=4)
 
     def load_students(self):
         if os.path.exists(self.file_path):
             with open(self.file_path, 'r') as file:
                 return json.load(file)
-        return []
+        raise FileNotFoundError(self.file_path)
 
     def save_students(self, students):
         with open(self.file_path, 'w') as file:
