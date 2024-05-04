@@ -2,9 +2,11 @@ from tkinter import Toplevel, Label, Button, Tk, messagebox, Entry
 import os
 from repository import StudentRepository
 
+
 class StudentEnrollmentPage:
     def __init__(self, master):
         self.master = master
+
 
 class StudentLoginPage:
     def __init__(self, master, student_repo):
@@ -58,6 +60,7 @@ class StudentLoginPage:
 
     def register_page(self):
         pass
+
 
 class AdminManagementPage:
     def __init__(self, master):
