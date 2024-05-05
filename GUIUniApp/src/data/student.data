@@ -14,9 +14,9 @@
     },
     {
         "id": "217953",
-        "name": "Klur",
-        "email": "wb@gmail.com",
-        "password": "qwert",
+        "name": "Fake user",
+        "email": "a",
+        "password": "a",
         "enrolled_subjects": []
     }
 ]
