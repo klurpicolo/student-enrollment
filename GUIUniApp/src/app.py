@@ -6,7 +6,8 @@ import os
 LARGEFONT = ("Verdana", 35)
 student_repository = StudentRepository(os.getcwd() + '/data/student.data')
 
-class tkinterApp(tk.Tk):
+
+class UniversityGuiApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
@@ -56,7 +57,6 @@ class tkinterApp(tk.Tk):
             button1.pack(fill="x")
             button2 = ttk.Button(self.pages_frame, text="LoginPage", command=lambda: self.show_frame(StudentLoginPage))
             button2.pack(fill="x")
-
 
 
 class StartPage(tk.Frame):
@@ -173,6 +173,7 @@ class StudentCoursePage(tk.Frame):
         change_password_label = ttk.Label(change_password_frame, text="Change Password", font=("Verdana", 20))
         change_password_label.pack()
 
+
 class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -225,7 +226,8 @@ class AdminPage(tk.Frame):
             item = tree.selection()[0]  # Get the selected item
             student_id = tree.item(item, "values")[0]  # Get the student ID
             student_name = tree.item(item, "values")[1]
-            confirmation = messagebox.askyesno("Confirmation", f"Are you sure you want to remove {student_name} student?")
+            confirmation = messagebox.askyesno("Confirmation",
+                                               f"Are you sure you want to remove {student_name} student?")
             if confirmation:
                 if student_repository.remove_student(student_id):
                     tree.delete(item)  # Remove the selected item from the Treeview
@@ -249,7 +251,7 @@ class AdminPage(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = tkinterApp()
+    app = UniversityGuiApp()
     app.title("GUIUniApp")
     app.geometry("800x600")
     app.mainloop()
