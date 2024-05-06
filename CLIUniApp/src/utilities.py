@@ -40,9 +40,34 @@ def print_blue(*values: object, sep: str | None = " ",
     print_colored(bcolors.OKBLUE, *values, sep=sep, end=end, flush=flush)
 
 
+def input_colored(prompt: str, color_code: str) -> str:
+    print_colored(color_code, prompt, end="")
+    user_input = input()
+    return user_input
+
+
+def input_red(prompt: str) -> str:
+    return input_colored(prompt, bcolors.FAIL)
+
+
+def input_green(prompt: str) -> str:
+    return input_colored(prompt, bcolors.WARNING)
+
+
+def input_yellow(prompt: str) -> str:
+    return input_colored(prompt, bcolors.OKGREEN)
+
+
+def input_blue(prompt: str) -> str:
+    return input_colored(prompt, bcolors.OKBLUE)
+
+
 if __name__ == "__main__":
-    print_red("This will be printed in red.")
-    print_green("This will be printed in green.")
-    print_yellow("This will be printed in yellow.")
-    print_blue("This will be printed in blue.")
-    print("This will be printed in default color.")
+    red_input = input_red("This will be input in red: ")
+    print_red(f'{red_input=}')
+    yellow_input = input_yellow("This will be input in red: ")
+    print_yellow(f'{yellow_input=}')
+    green_input = input_green("This will be input in red: ")
+    print_green(f'{green_input=}')
+    blue_input = input_blue("This will be input in red: ")
+    print_blue(f'{blue_input=}')
