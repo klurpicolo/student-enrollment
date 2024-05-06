@@ -1,7 +1,8 @@
 import sys
+from utilities import *
 
 class BaseView:
 
     def logout(self):
-        print('Logging out, Good bye')
+        print_yellow('Thank you')
         sys.exit(0)

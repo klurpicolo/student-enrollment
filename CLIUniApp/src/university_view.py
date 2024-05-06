@@ -1,7 +1,7 @@
 from view import BaseView
 from admin_view import AdminView
 from student_login_view import StudentLoginView
-
+from utilities import *
 
 class UniversityView(BaseView):
     """
@@ -12,30 +12,21 @@ class UniversityView(BaseView):
         (x) exit
     """
 
-    hint = """
-    University main menu
-    Please select the following option
-    - (a) Admin
-    - (s) Student
-    - (X) Log out
-    """
+    hint = """University System: (A)dmin, (S)tudent, or X: """
 
     def __init__(self, admin_view: AdminView, student_login_view: StudentLoginView):
         self.admin_view = admin_view
         self.student_login_view = student_login_view
 
     def menu(self):
-        print(self.hint)
         while True:
-            choice = input("Please enter the following choice(a, s, x): ")
+            choice = input_blue(self.hint)
             match choice:
-                case "a":
-                    "logged in as admin"
+                case "A":
                     self.admin_view.menu()
-                case "s":
-                    "enter student"
+                case "S":
                     self.student_login_view.menu()
-                case "x":
+                case "X":
                     self.logout()
                 case _:
-                    print(f"The choice {choice} is not one of a, s, x). Please select a new valid choice.")
+                    print(f"The choice {choice} is not one of A, S, X). Please select a new valid choice.")
