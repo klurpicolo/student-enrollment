@@ -16,20 +16,20 @@ class StudentRepository:
                 return json.load(file)
         raise FileNotFoundError(self.file_path)
 
-    def save_students(self, students):
+    def save_students(self, students: list[Student]):
         with open(self.file_path, 'w') as file:
             json.dump(students, file, indent=4)
 
     def get_all_students(self) -> list[Student]:
         return [Student.deserialize(student_dict) for student_dict in self.load_students()]
 
-    def add_student(self, to_add):
+    def add_student(self, to_add: Student):
         students = self.load_students()
         students.append(to_add.to_json())
         self.save_students(students)
         return True
 
-    def get_student_by_id(self, student_id):
+    def get_student_by_id(self, student_id: str):
         students = self.load_students()
         for student_dict in students:
             student = Student.deserialize(student_dict)
@@ -37,7 +37,7 @@ class StudentRepository:
                 return student
         return None
 
-    def remove_student(self, student_id):
+    def remove_student(self, student_id: str):
         students = self.load_students()
         for student_dict in students:
             student = Student.deserialize(student_dict)
@@ -47,7 +47,7 @@ class StudentRepository:
                 return True
         return False
 
-    def update_student(self, to_update):
+    def update_student(self, to_update: Student):
         students = self.load_students()
         for i, student_dict in enumerate(students):
             student = Student.deserialize(student_dict)

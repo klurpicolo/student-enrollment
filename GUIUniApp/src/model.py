@@ -135,6 +135,7 @@ class Student:
         if len(self.enrolled_subjects) >= 4:
             return False
         self.enrolled_subjects.append(subject)
+        return True
 
     def withdraw_subject(self, to_remove_subject: Subject) -> bool:
         for enrol_subject in self.enrolled_subjects:

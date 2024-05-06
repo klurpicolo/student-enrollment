@@ -10,7 +10,7 @@ import os
 if __name__ == "__main__":
     # Inject Dependency
     student_repository = StudentRepository(
-        os.getcwd() + '/data/student.data'
+        '/Users/georgeluther/Desktop/Master/FSD/UniversityApplication/student-enrollment/CLIUniApp/src/data/student.data'
     )
     admin_view = AdminView(student_repository)
     student_view = StudentView(student_repository=student_repository)

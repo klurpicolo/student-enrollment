@@ -1,6 +1,7 @@
 from view import BaseView
 from repository import StudentRepository
 from model import Student, Subject
+import utilities as utils
 
 class StudentView(BaseView):
     """
@@ -17,30 +18,22 @@ class StudentView(BaseView):
         self.student_repo: StudentRepository = student_repository
         self.student: Student = student
 
-    hint = """
-    Logged in as student , you can select the following option
-    - (E) enrol subject
-    - (D) display enroleld subjects
-    - (W) withdraw subject
-    - (X) log out
-    - (C) change password
-    """
+    hint = "   Student Course Menu (c/e/r/s/x): "
     
     def menu(self):
-        print(self.hint)
         # TO be implemented
         while True:
-            choice = input("Please enter a choice: ")
+            choice = utils.input_blue(self.hint)
             match choice:
-                case "X":
+                case "x":
                     self.logout()
-                case "E":
+                case "e":
                     self.enrolSubject()
-                case "W":
+                case "r":
                     self.withdrawEnrolment()
-                case "D":
+                case "s":
                     self.displayEnrolment()
-                case "C":
+                case "c":
                     self.changePassword()
 
     def enrolSubject(self):
