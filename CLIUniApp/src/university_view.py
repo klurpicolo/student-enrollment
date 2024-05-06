@@ -3,6 +3,7 @@ from admin_view import AdminView
 from student_login_view import StudentLoginView
 from utilities import *
 
+
 class UniversityView(BaseView):
     """
     The University System
