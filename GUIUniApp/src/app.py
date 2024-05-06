@@ -142,6 +142,8 @@ class StudentLoginPage(tk.Frame):
                 self.controller.logged_in_student = student
                 self.controller.show_frame(StudentCoursePage)
                 break
+        else:
+            messagebox.showinfo("Fail", f"Email or Password incorrect")
 
     def register_student(self):
         name = self.name_entry.get()
@@ -205,6 +207,38 @@ class StudentCoursePage(tk.Frame):
         change_password_label = ttk.Label(change_password_frame, text="Change Password", font=("Verdana", 20))
         change_password_label.pack()
 
+        new_password_label = ttk.Label(change_password_frame, text="New Password:")
+        new_password_label.pack()
+        new_password_entry = ttk.Entry(change_password_frame, show="*")  # Mask password entry
+        new_password_entry.pack()
+
+        confirm_password_label = ttk.Label(change_password_frame, text="Confirm Password:")
+        confirm_password_label.pack()
+        confirm_password_entry = ttk.Entry(change_password_frame, show="*")  # Mask password entry
+        confirm_password_entry.pack()
+
+        def change_password():
+            new_password = new_password_entry.get()
+            confirm_password = confirm_password_entry.get()
+
+            if not validate_password(new_password):
+                messagebox.showerror("Error",
+                                     "Invalid password format. Password should start with an uppercase letter, "
+                                     "followed by at least 5 letters and end with at least 3 digits.")
+                return
+
+            if new_password == confirm_password:
+                # Update student's password
+                current_student = self.controller.logged_in_student
+                current_student.password = new_password
+                student_repository.update_student(current_student)
+                messagebox.showinfo("Password Changed", "Your password has been changed successfully.")
+            else:
+                messagebox.showerror("Error", "New password and confirmed password do not match.")
+
+        change_password_button = ttk.Button(change_password_frame, text="Change Password", command=change_password)
+        change_password_button.pack()
+
     def enroll_subject(self):
         # Create a new subject and enroll it
         new_subject = Subject()
@@ -222,7 +256,7 @@ class StudentCoursePage(tk.Frame):
     def re_render(self):
         for widget in self.show_frame.winfo_children():
             widget.destroy()
-        tree = ttk.Treeview(self.show_fame, columns=("ID", "Mark", "Grade"), show="headings")
+        tree = ttk.Treeview(self.show_frame, columns=("ID", "Mark", "Grade"), show="headings")
         tree.heading("ID", text="ID")
         tree.heading("Mark", text="Mark")
         tree.heading("Grade", text="Grade")
