@@ -21,7 +21,7 @@ class UniversityView(BaseView):
 
     def menu(self):
         while True:
-            choice = input_blue(self.hint)
+            choice = input_blue(self.hint, is_indent=False)
             match choice:
                 case "A":
                     self.admin_view.menu()
@@ -30,4 +30,4 @@ class UniversityView(BaseView):
                 case "X":
                     self.logout()
                 case _:
-                    print(f"The choice {choice} is not one of A, S, X). Please select a new valid choice.")
+                    print_red(f"The choice {choice} is not one of A, S, X). Please select a new valid choice.", is_indent=False)
