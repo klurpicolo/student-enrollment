@@ -17,6 +17,29 @@
         "name": "Fake user",
         "email": "a",
         "password": "a",
+        "enrolled_subjects": [
+            {
+                "id": "123",
+                "mark": 99,
+                "grade": "HD"
+            },
+            {
+                "id": "456",
+                "mark": 80,
+                "grade": "D"
+            },
+            {
+                "id": "789",
+                "mark": 20,
+                "grade": "Z"
+            }
+        ]
+    },
+    {
+        "id": "771292",
+        "name": "asdasd",
+        "email": "asd.ad@university.com",
+        "password": "Hasdasd2312",
         "enrolled_subjects": []
     }
 ]

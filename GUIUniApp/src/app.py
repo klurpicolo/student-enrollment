@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, Text, messagebox
+from model import Student
 from repository import StudentRepository
+from validator import validate_email, validate_password
 import os
 
 LARGEFONT = ("Verdana", 35)
@@ -22,6 +24,7 @@ class UniversityGuiApp(tk.Tk):
         self.main_frame.grid(row=0, column=1, sticky="nsew")
 
         self.frames = {}
+        self.logged_in_student = None
         for F in (StartPage, StudentLoginPage, AdminPage, StudentCoursePage):
             frame = F(self.main_frame, self)
             self.frames[F] = frame
@@ -31,6 +34,7 @@ class UniversityGuiApp(tk.Tk):
 
     def show_frame(self, cont):
         frame = self.frames[cont]
+        frame.re_render()
         frame.tkraise()
         self.update_sidebar_buttons(frame)
 
@@ -67,6 +71,9 @@ class StartPage(tk.Frame):
 
         select_label = ttk.Label(self, text="Select student or admin page", font=("Verdana", 12))
         select_label.pack()
+
+    def re_render(self):
+        pass
 
 
 class StudentLoginPage(tk.Frame):
@@ -122,6 +129,9 @@ class StudentLoginPage(tk.Frame):
         register_button = ttk.Button(register_frame, text="Sign Up", command=self.register_student)
         register_button.grid(row=4, column=0, columnspan=2, pady=10)
 
+    def re_render(self):
+        pass
+
     def login(self):
         email = self.email_entry_login.get()
         password = self.password_entry_login.get()
@@ -129,6 +139,7 @@ class StudentLoginPage(tk.Frame):
         for student in students:
             if student.email == email and student.password == password:
                 messagebox.showinfo("Success", f"Welcome {student.name}")
+                self.controller.logged_in_student = student
                 self.controller.show_frame(StudentCoursePage)
                 break
 
@@ -136,10 +147,30 @@ class StudentLoginPage(tk.Frame):
         name = self.name_entry.get()
         email = self.email_entry_register.get()
         password = self.password_entry_register.get()
-        # Not implement this yet
+
+        # Validating email and password
+        if not validate_email(email):
+            messagebox.showerror("Error", "Invalid email format. Email should be in the format "
+                                          "'firstname.lastname@university.com'")
+            return
+        if not validate_password(password):
+            messagebox.showerror("Error", "Invalid password format. Password should start with an uppercase letter, "
+                                          "followed by at least 5 letters and end with at least 3 digits.")
+            return
+
+        # Registering student
+        if student_repository.add_student(Student(name=name, email=email, password=password)):
+            messagebox.showinfo("Success", "Registration successful!")
+            # Clearing the entry fields after successful registration
+            self.name_entry.delete(0, 'end')
+            self.email_entry_register.delete(0, 'end')
+            self.password_entry_register.delete(0, 'end')
+        else:
+            messagebox.showerror("Error", "Failed to register student.")
 
 
 class StudentCoursePage(tk.Frame):
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -154,6 +185,7 @@ class StudentCoursePage(tk.Frame):
         notebook.add(show_frame, text="Show")
         show_label = ttk.Label(show_frame, text="Show Courses", font=("Verdana", 20))
         show_label.pack()
+        self.show_frame = show_frame
 
         # Enroll Tab
         enroll_frame = ttk.Frame(notebook)
@@ -173,12 +205,24 @@ class StudentCoursePage(tk.Frame):
         change_password_label = ttk.Label(change_password_frame, text="Change Password", font=("Verdana", 20))
         change_password_label.pack()
 
+    def re_render(self):
+        tree = ttk.Treeview(self.show_frame, columns=("ID", "Mark", "Grade"), show="headings")
+        tree.heading("ID", text="ID")
+        tree.heading("Mark", text="Mark")
+        tree.heading("Grade", text="Grade")
+        tree.pack(fill="both", expand=True)
+        enrolled_subjects = self.controller.logged_in_student.enrolled_subjects
+        for subject in enrolled_subjects:
+            tree.insert("", "end", values=(subject.id, subject.mark, subject.grade))
 
 class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.create_notebook()
+
+    def re_render(self):
+        pass
 
     def create_notebook(self):
         notebook = ttk.Notebook(self)
