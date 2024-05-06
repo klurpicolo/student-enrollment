@@ -31,24 +31,32 @@ class AdminView(BaseView):
     """
     
     def menu(self):
-        print(self.hint)
-        choice = input("Please enter the choice: ")
         # TO be implemented
-        match choice:
-            case "X":
-                self.logout()
-        pass
+        admin_choice = input_blue("Admin System (c/g/p/r/s/x): ")
+        if admin_choice == "s":
+            self.viewStudents()
+        elif admin_choice == 'g':
+            self.viewStudentsByGrade()
+        elif admin_choice == 'p':
+            self.filterByPassFail()
+        elif admin_choice == 'r':
+            self.removeStudent()
+        elif admin_choice == 'c':
+            self.clearStudentDataStore()
+        elif admin_choice == 'x':
+            self.logout()
+
 
     
     def viewStudents(self):
         students = self.student_repository.get_all_students()
         print_yellow("Student List")
         for student in students:
-            print(f"{student.name} :: {student.id} --> Email: {student.email}")
+            print_white(f"{student.name} :: {student.id} --> Email: {student.email}")
             
         
     def viewStudentsByGrade(self):
-        students = student_repository.get_all_students()
+        students = self.student_repository.get_all_students()
         print_yellow("Grade Grouping")
         gradeTitle = ['HD', 'D', 'C', 'P', 'Z']
         
@@ -86,17 +94,17 @@ class AdminView(BaseView):
             if len(grade) == 0:
                 continue
             else:
-                print(gradeTitle[index], ' --> ',end = '')
-            print('[',end = '')
+                print_white(gradeTitle[index], ' --> ',end = '')
+            print_white('[',end = '', is_indent= False)
             
             for student, avgMark, avgGrade in grade:
                 
-                print(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}", end = '')
-            print(']')
+                print_white(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}, ", end = '', is_indent=False)
+            print_white(']', is_indent= False)
             
 
     def filterByPassFail(self):
-        students = student_repository.get_all_students()
+        students = self.student_repository.get_all_students()
         print_yellow("PASS/FAIL Partition")
         Titles = ['Fail', 'Pass']
         Pass = []
@@ -120,13 +128,14 @@ class AdminView(BaseView):
                 
         for index, status in enumerate(PnF):
            
-            print(Titles[index], ' --> ',end = '')
-            print('[',end = '')
+            print_white(Titles[index], ' --> ',end = '')
+            print_white('[',end = '', is_indent=False)
+        
             
             for student, avgMark, avgGrade in status:
                 
-                print(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}", end = '')
-            print(']')
+                print_white(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}, ", end = '', is_indent=False)
+            print_white(']',is_indent=False)
                 
 
     def removeStudent(self):
@@ -172,7 +181,7 @@ if __name__ == "__main__":
         admin_view.removeStudent()
     elif admin_choice == 'c':
         admin_view.clearStudentDataStore()
-        
+    
     
 
         
