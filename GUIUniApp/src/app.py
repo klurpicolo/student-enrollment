@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, Text, messagebox
-from model import Student
+from model import Student, Subject
 from repository import StudentRepository
 from validator import validate_email, validate_password
 import os
@@ -24,7 +24,7 @@ class UniversityGuiApp(tk.Tk):
         self.main_frame.grid(row=0, column=1, sticky="nsew")
 
         self.frames = {}
-        self.logged_in_student = None
+        self.logged_in_student: Student | None = None
         for F in (StartPage, StudentLoginPage, AdminPage, StudentCoursePage):
             frame = F(self.main_frame, self)
             self.frames[F] = frame
@@ -190,8 +190,8 @@ class StudentCoursePage(tk.Frame):
         # Enroll Tab
         enroll_frame = ttk.Frame(notebook)
         notebook.add(enroll_frame, text="Enroll")
-        enroll_label = ttk.Label(enroll_frame, text="Enroll in Courses", font=("Verdana", 20))
-        enroll_label.pack()
+        enroll_button = ttk.Button(enroll_frame, text="Enroll", command=self.enroll_subject)
+        enroll_button.pack()
 
         # Remove Tab
         remove_frame = ttk.Frame(notebook)
@@ -205,8 +205,24 @@ class StudentCoursePage(tk.Frame):
         change_password_label = ttk.Label(change_password_frame, text="Change Password", font=("Verdana", 20))
         change_password_label.pack()
 
+    def enroll_subject(self):
+        # Create a new subject and enroll it
+        new_subject = Subject()
+        current_student = self.controller.logged_in_student
+        is_success = current_student.enroll(new_subject)
+        if not is_success:
+            messagebox.showerror("Error", "You already enroll 4 subjects")
+        else:
+            student_repository.update_student(current_student)
+            self.re_render()
+            messagebox.showinfo("Enrollment Successful", f"The subject has been enrolled successfully:\n"
+                                                        f"ID: {new_subject.id}\n"
+                                                        f"Mark: {new_subject.mark}\n"
+                                                        f"Grade: {new_subject.grade}")
     def re_render(self):
-        tree = ttk.Treeview(self.show_frame, columns=("ID", "Mark", "Grade"), show="headings")
+        for widget in self.show_frame.winfo_children():
+            widget.destroy()
+        tree = ttk.Treeview(self.show_fame, columns=("ID", "Mark", "Grade"), show="headings")
         tree.heading("ID", text="ID")
         tree.heading("Mark", text="Mark")
         tree.heading("Grade", text="Grade")
