@@ -23,5 +23,18 @@
         "email": "wb@gmail.com",
         "password": "qwert",
         "enrolled_subjects": []
+    },
+    {
+        "id": "225675",
+        "name": "Mark",
+        "email": "ml@gmail.com",
+        "password": "12345",
+        "enrolled_subjects": [
+            {
+                "id": "124",
+                "mark": 90,
+                "grade": "HD"
+            }
+        ]
     }
 ]

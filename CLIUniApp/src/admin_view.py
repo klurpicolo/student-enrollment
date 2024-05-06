@@ -1,6 +1,7 @@
 from view import BaseView
 from repository import StudentRepository
 from model import Grade
+from utilities import *
 
 # Mark is working on this
 class AdminView(BaseView):
@@ -41,13 +42,14 @@ class AdminView(BaseView):
     
     def viewStudents(self):
         students = self.student_repository.get_all_students()
+        print_yellow("Student List")
         for student in students:
-            print(f"Student id:  {student.id}")
-            print(f"Student Name:  {student.name}")
-            print(f"Student Email: {student.email}")
+            print(f"{student.name} :: {student.id} --> Email: {student.email}")
+            
         
     def viewStudentsByGrade(self):
         students = student_repository.get_all_students()
+        print_yellow("Grade Grouping")
         gradeTitle = ['HD', 'D', 'C', 'P', 'Z']
         
         HD = []
@@ -60,6 +62,7 @@ class AdminView(BaseView):
         for student in students:
             totalMark = 0
             courseCount = 0
+            
             for course in student.enrolled_subjects:
                 totalMark += course.mark
                 courseCount += 1
@@ -67,31 +70,38 @@ class AdminView(BaseView):
             if courseCount == 0:
                 continue
             avgMark = totalMark/courseCount
+            avgGrade = Grade.from_mark(avgMark)
             if avgMark > 85:
-                HD.append(student)
+                HD.append((student, avgMark, avgGrade))
             elif 75 <= avgMark < 85:
-                D.append(student)
+                D.append((student, avgMark, avgGrade))
             elif 65 <= avgMark < 75:
-                C.append(student)
+                C.append((student, avgMark, avgGrade))
             elif 50 <= avgMark < 65: 
-                P.append(student)
+                P.append((student, avgMark, avgGrade))
             else:
-                Z.append(student)
+                Z.append((student, avgMark, avgGrade))
                 
         for index, grade in enumerate(gradeList):
-            print(gradeTitle[index], ':')
-            for student in grade:
-                print(f"{student.name} :: {student.id} --> Mark: {avgMark}")
-                #print(f"Student Name:  {student.name}")
-                #print(f"Student Email: {student.email}")         
+            if len(grade) == 0:
+                continue
+            else:
+                print(gradeTitle[index], ' --> ',end = '')
+            print('[',end = '')
+            
+            for student, avgMark, avgGrade in grade:
+                
+                print(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}", end = '')
+            print(']')
             
 
     def filterByPassFail(self):
         students = student_repository.get_all_students()
-        Titles = ['Pass', 'Fail']
+        print_yellow("PASS/FAIL Partition")
+        Titles = ['Fail', 'Pass']
         Pass = []
         Fail = []
-        PnF = [Pass, Fail]
+        PnF = [Fail, Pass]
         for student in students:
             totalMark = 0
             courseCount = 0
@@ -102,26 +112,46 @@ class AdminView(BaseView):
             if courseCount == 0:
                 continue
             avgMark = totalMark/courseCount
+            avgGrade = Grade.from_mark(avgMark)
             if avgMark < 50:
-                Fail.append(student)
+                Fail.append((student, avgMark, avgGrade))
             else:
-                Pass.append(student)
+                Pass.append((student, avgMark, avgGrade))
                 
         for index, status in enumerate(PnF):
-            print(Titles[index], ' --> ', end='')
-            for student in status:
-                print(f"{student.name} :: {student.id} --> Mark: {avgMark}")
+           
+            print(Titles[index], ' --> ',end = '')
+            print('[',end = '')
+            
+            for student, avgMark, avgGrade in status:
+                
+                print(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}", end = '')
+            print(']')
                 
 
     def removeStudent(self):
-        pass
+        idToRemove = input("Remove by ID: ")
+        if self.student_repository.remove_student(idToRemove) == True:
+            print_yellow("Removing Student "+idToRemove+" Account")
+        else:
+            print_red("Student "+idToRemove+" does not exist")
+            
+         
+        
+    
 
     def clearStudentDataStore(self):
-        pass
+        print_yellow("Clearing student database")
+        confirm = input_red("Are you sure you want to clear the student database (Y)ES/(N)O ")
+        if confirm in ["Y","y"]:
+            self.student_repository.clean_database()
+            print_yellow("Student data cleared")
+        
+            
+        
 
 
 if __name__ == "__main__":
-    print("start from admin view")
     student_repository = StudentRepository(
         "D:\Python\student-enrollment\CLIUniApp\src\data\student.data"
     )
@@ -131,13 +161,17 @@ if __name__ == "__main__":
     print(students)'''
     
     admin_view = AdminView(student_repository)
-    admin_choice = input("Enter your choice...")
+    admin_choice = input_blue("Admin System (c/g/p/r/s/x): ")
     if admin_choice == "s":
         admin_view.viewStudents()
     elif admin_choice == 'g':
         admin_view.viewStudentsByGrade()
     elif admin_choice == 'p':
         admin_view.filterByPassFail()
+    elif admin_choice == 'r':
+        admin_view.removeStudent()
+    elif admin_choice == 'c':
+        admin_view.clearStudentDataStore()
         
     
 
