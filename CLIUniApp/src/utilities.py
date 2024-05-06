@@ -55,6 +55,13 @@ def print_blue(*values: object, sep: str | None = " ",
     print_colored(bcolors.OKCYAN, *values, sep=sep, end=end, flush=flush)
 
 
+def print_white(*values: object, sep: str | None = " ",
+               end: str | None = "\n", flush: Literal[False] = False, is_indent: bool = True):
+    if is_indent:
+        if values:
+            values = (indent + values[0],) + values[1:]
+    print(*values, sep=sep, end=end, flush=flush)
+
 def input_colored(prompt: str, color_code: str) -> str:
     print_colored(color_code, prompt, end="")
     user_input = input()
@@ -85,12 +92,20 @@ def input_blue(prompt: str, is_indent: bool = True) -> str:
     return input_colored(prompt, bcolors.OKCYAN)
 
 
+def input_white(prompt: str, is_indent: bool = True) -> str:
+    if is_indent:
+        prompt = indent + prompt
+    return input(prompt)
+
+
 if __name__ == "__main__":
     red_input = input_red("This will be input in red: ")
     print_red(f'{red_input=}')
-    yellow_input = input_yellow("This will be input in yello: ")
+    yellow_input = input_yellow("This will be input in yellow: ")
     print_yellow(f'{yellow_input=}')
     green_input = input_green("This will be input in red: ")
     print_green(f'{green_input=}')
     blue_input = input_blue("This will be input in red: ")
     print_blue(f'{blue_input=}')
+    white_input = input_white("This will be input in white: ")
+    print_white(f'{white_input=}')

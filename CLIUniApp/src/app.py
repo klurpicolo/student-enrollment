@@ -8,8 +8,6 @@ import os
 
 
 if __name__ == "__main__":
-    print("Initialize application")
-
     # Inject Dependency
     student_repository = StudentRepository(
         os.getcwd() + '/data/student.data'
@@ -22,6 +20,4 @@ if __name__ == "__main__":
     university_view = UniversityView(
         admin_view=admin_view, student_login_view=student_login_view
     )
-
-    print("Application started")
     university_view.menu()
