@@ -37,8 +37,8 @@ class StudentLoginView(BaseView):
 
     def login(self):
         utils.print_green("Student Sign In")
-        email = input("Email: ")
-        password = input("Password: ")
+        email = utils.input_white("Email: ")
+        password = utils.input_white("Password: ")
         all_students = self.student_repository.get_all_students()
         all_emails = [student.email for student in all_students]
         is_login_fail = self.validate_credentials(email=email, password=password)
@@ -59,8 +59,8 @@ class StudentLoginView(BaseView):
         existing_emails = [student.email for student in students] # our iterator
 
         while True:
-            input_email = input("Email: ")
-            input_password = input("Password: ")
+            input_email = utils.input_white("Email: ")
+            input_password = utils.input_white("Password: ")
             # Success - saving student to student_repository from here...
             if self.validate_credentials(input_email, input_password):
                 # check if student exists
@@ -73,7 +73,7 @@ class StudentLoginView(BaseView):
                         student_exists = True
                 # If student doesn't exist, after checking for all students...
                 if student_exists == False:
-                    fullname = input("Name: ")
+                    fullname = utils.input_white("Name: ")
                     utils.print_yellow(f"Enrolling Student {fullname}")
                     student_to_store = Student(fullname, input_email, input_password)
                     self.student_repository.add_student(student_to_store)
