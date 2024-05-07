@@ -197,10 +197,37 @@ class StudentCoursePage(tk.Frame):
         enroll_button.pack()
 
         # Remove Tab
-        remove_frame = ttk.Frame(notebook)
-        notebook.add(remove_frame, text="Remove")
-        remove_label = ttk.Label(remove_frame, text="Remove Courses", font=("Verdana", 20))
-        remove_label.pack()
+        withdraw_frame = ttk.Frame(notebook)
+        notebook.add(withdraw_frame, text="Remove")
+        self.withdraw_frame = withdraw_frame
+        login_label = ttk.Label(withdraw_frame, text="Enter subject id to withdraw", font=("Verdana", 20))
+        login_label.grid(row=0, column=0, columnspan=2, pady=10)
+
+        subject_id_label = ttk.Label(withdraw_frame, text="Subject Id:")
+        subject_id_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        self.to_remove_subject = ttk.Entry(withdraw_frame)
+        self.to_remove_subject.grid(row=1, column=1, padx=5, pady=5)
+
+        def withdraw_subject():
+            subjects = self.controller.logged_in_student.enrolled_subjects
+            to_remove = self.to_remove_subject.get()
+            is_found = False
+            for subject in subjects:
+                if subject.id == to_remove:
+                    is_found = True
+                    confirmation = messagebox.askyesno("Confirmation",
+                                                       f"Are you sure you want to remove {to_remove} subject?")
+                    if confirmation:
+                        self.controller.logged_in_student.withdraw_subject(subject)
+                        student_repository.update_student(self.controller.logged_in_student)
+                        messagebox.showinfo("Success", f"Subject with ID {to_remove} has been removed.")
+                self.re_render()
+                break
+            if not is_found:
+                messagebox.showerror("Error", f"Subject {to_remove} is not found")
+
+        withdraw_button = ttk.Button(withdraw_frame, text="withdraw", command=withdraw_subject)
+        withdraw_button.grid(row=2, column=0, columnspan=2, pady=10)
 
         # Change Password Tab
         change_password_frame = ttk.Frame(notebook)
@@ -251,9 +278,10 @@ class StudentCoursePage(tk.Frame):
             student_repository.update_student(current_student)
             self.re_render()
             messagebox.showinfo("Enrollment Successful", f"The subject has been enrolled successfully:\n"
-                                                        f"ID: {new_subject.id}\n"
-                                                        f"Mark: {new_subject.mark}\n"
-                                                        f"Grade: {new_subject.grade}")
+                                                         f"ID: {new_subject.id}\n"
+                                                         f"Mark: {new_subject.mark}\n"
+                                                         f"Grade: {new_subject.grade}")
+
     def re_render(self):
         for widget in self.show_frame.winfo_children():
             widget.destroy()
