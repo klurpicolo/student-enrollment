@@ -45,6 +45,45 @@
         "name": "asdasd",
         "email": "asd.ad@university.com",
         "password": "Hasdasd2312",
-        "enrolled_subjects": []
+        "enrolled_subjects": [
+            {
+                "id": "490",
+                "mark": 57,
+                "grade": "P"
+            },
+            {
+                "id": "757",
+                "mark": 36,
+                "grade": "Z"
+            },
+            {
+                "id": "233",
+                "mark": 98,
+                "grade": "HD"
+            },
+            {
+                "id": "302",
+                "mark": 76,
+                "grade": "D"
+            }
+        ]
+    },
+        {
+        "id": "558515",
+        "name": "Bad student",
+        "password": "aaaa",
+        "email": "bad.stud@university.com",
+        "enrolled_subjects": [
+            {
+                "id": "123",
+                "mark": 0,
+                "grade": "Z"
+            },
+            {
+                "id": "662",
+                "mark": 20,
+                "grade": "Z"
+            }
+        ]
     }
 ]

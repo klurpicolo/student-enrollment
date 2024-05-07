@@ -1,9 +1,10 @@
+import os
 import tkinter as tk
-from tkinter import ttk, Text, messagebox
-from model import Student, Subject
+from tkinter import ttk, messagebox
+
+from model import Student, Subject, Grade
 from repository import StudentRepository
 from validator import validate_email, validate_password
-import os
 
 LARGEFONT = ("Verdana", 35)
 student_repository = StudentRepository(os.getcwd() + '/data/student.data')
@@ -303,11 +304,57 @@ class AdminPage(tk.Frame):
         group_label = ttk.Label(group_frame, text="Group students by grade", font=("Verdana", 20))
         group_label.pack()
 
+        # Create a Treeview widget
+        tree = ttk.Treeview(group_frame, columns=("grade", "id", "name"), show="headings")
+        tree.heading("grade", text="Grade")
+        tree.heading("id", text="ID")
+        tree.heading("name", text="Name")
+        tree.pack()
+
+        grade_to_student = {}
+        for student in student_repository.get_all_students():
+            if len(student.enrolled_subjects) == 0:
+                continue
+            sum_mark = sum(sub.mark for sub in student.enrolled_subjects)
+            grade = Grade.from_mark(sum_mark / len(student.enrolled_subjects))
+            if grade not in grade_to_student:
+                grade_to_student[grade] = []
+            grade_to_student[grade].append(student)
+
+        # Populate the treeview with data
+        for grade, students in grade_to_student.items():
+            for student in students:
+                tree.insert("", "end", values=(str(grade), student.id, student.name))
+
     def create_partition_tab(self, notebook):
         partition_frame = ttk.Frame(notebook)
         notebook.add(partition_frame, text="Partition")
         partition_label = ttk.Label(partition_frame, text="Partition student by pass/fail", font=("Verdana", 20))
         partition_label.pack()
+
+        pass_student = []
+        failed_student = []
+        for student in student_repository.get_all_students():
+            if len(student.enrolled_subjects) == 0:
+                continue
+            sum_mark = sum(sub.mark for sub in student.enrolled_subjects)
+            grade = Grade.from_mark(sum_mark / len(student.enrolled_subjects))
+            if grade == Grade.Z:
+                failed_student.append(student)
+            else:
+                pass_student.append(student)
+
+        # Create a Treeview widget
+        tree = ttk.Treeview(partition_frame, columns=("grade", "id", "name"), show="headings")
+        tree.heading("grade", text="Grade")
+        tree.heading("id", text="ID")
+        tree.heading("name", text="Name")
+        tree.pack()
+
+        for student in pass_student:
+            tree.insert("", "end", values=("Pass", student.id, student.name))
+        for student in failed_student:
+            tree.insert("", "end", values=("Failed", student.id, student.name))
 
     def create_remove_tab(self, notebook):
         remove_frame = ttk.Frame(notebook)
