@@ -51,7 +51,7 @@ class StudentLoginView(BaseView):
             for student in all_students:
                 if student.email == email and student.password == password:
                     is_login_fail = False
-                    StudentView(student, self.student_repository).menu()
+                    StudentView(self.student_repository, student).menu()
             
     def register(self):
         utils.print_green("Student Sign Up")
@@ -116,4 +116,4 @@ class StudentLoginView(BaseView):
         for student in students:
             if student.email == email and student.password == password:
                 print("Login Success!")
-                StudentView(student, self.student_repository).menu()
+                StudentView(self.student_repository, student).menu()

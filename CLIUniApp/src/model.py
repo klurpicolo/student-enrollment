@@ -82,7 +82,7 @@ class Subject:
         return self.id == other.id and self.mark == other.mark and self.grade == other.grade
 
     def __str__(self) -> str:
-        return f'Subject::{self.id}, mark = {self.mark}, grade = {self.grade}'
+        return f'Subject::{self.id} -- mark = {self.mark} -- grade =  {self.grade: >2}'
 
 
 class Admin:

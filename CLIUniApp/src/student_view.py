@@ -1,7 +1,8 @@
 from view import BaseView
 from repository import StudentRepository
 from model import Student, Subject
-import utilities as utils
+from utilities import *
+import re
 
 class StudentView(BaseView):
     """
@@ -18,12 +19,12 @@ class StudentView(BaseView):
         self.student_repo: StudentRepository = student_repository
         self.student: Student = student
 
-    hint = "   Student Course Menu (c/e/r/s/x): "
+    hint = "Student Course Menu (c/e/r/s/x): "
     
     def menu(self):
         # TO be implemented
         while True:
-            choice = utils.input_blue(self.hint)
+            choice = input_blue(self.hint)
             match choice:
                 case "x":
                     self.logout()
@@ -38,36 +39,47 @@ class StudentView(BaseView):
 
     def enrolSubject(self):
         if len(self.student.enrolled_subjects) >= 4:
-            print("You have already enrolled in the maximum number of subjects (4).")
+            print_red("Students are allowed to enroll in 4 subjects only")
             return
         
         new_subject = Subject()        
         # Testing the case where subject already exists...
-        if new_subject not in student.enrolled_subjects:
-            student.enrolled_subjects.append(new_subject)
-            print(f"Success! Enrolled into Subject-{new_subject.id}")
-        else:
-            print("No action taken. You are already enrolled into this subject.")
+        if new_subject not in self.student.enrolled_subjects:
+            self.student.enrolled_subjects.append(new_subject)
+            print_yellow(f"Enrolling in subject-{new_subject.id}")
+            print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
+        
 
 
     def displayEnrolment(self):
-        if len(self.student.enrolled_subjects) > 0:
-            print("Enrolled Subjects:")
-            for i, subject in enumerate(self.student.enrolled_subjects):
-                print(f'[ {subject} ]')
-        else:
-            print("You have yet to enrol into any subjects.")
+    
+        print_yellow(f"Showing {len(self.student.enrolled_subjects)} subjects")
+        for i, subject in enumerate(self.student.enrolled_subjects):
+            print_white(f'[ {subject} ]')
+
 
     def withdrawEnrolment(self):
-        withdraw_id = str(input("Remove subject by ID: "))
-        print(f'withdraw_id {withdraw_id}')
+        withdraw_id = str(input_white("Remove subject by ID: "))
+        print_yellow(f'Dropping subject-{withdraw_id}')
 
         new_enrol_subject = [s for s in self.student.enrolled_subjects if s.id != withdraw_id]
         self.student.enrolled_subjects = new_enrol_subject
-        for s in self.student.enrolled_subjects:
-            print(f'[ {s} ]')
+       
+        print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
         # print(f'self.student.enrolled_subjects {self.student.enrolled_subjects}')
         self.student_repo.update_student(self.student)
+        
+    def validate_password(self, password):
+        """
+        Will return true if password pattern matches password input.
+        
+        Password:
+        - Start with upper case
+        - Minimum 6 letters
+        - Following by minimum 3-digits
+        """
+        password_pattern = r"^[A-Z][a-zA-Z]{5,}[0-9]{3,}$"
+        return re.match(password_pattern, password)
         
 
         # new_subject_list = []
@@ -89,9 +101,19 @@ class StudentView(BaseView):
         #             print(f"Have successfully withdrawn from {subject}")
 
     def changePassword(self):
-        new_password = input("Please enter a new password: ")
-        student.student_password = new_password
-        print("Password change successful.")
+        print_yellow("Updating password")
+        new_password = input_white("New password: ")
+        if not self.validate_password(new_password):
+            print_red("Incorrect password format")
+            return
+        while True: 
+            confirm_password = input_white("Confirm password: ")
+            if new_password == confirm_password:
+                break
+            else:
+                print_red("Password does not match - try again")
+        self.student.password = new_password
+        self.student_repo.update_student(self.student)
 
     def exit(self):
         pass
