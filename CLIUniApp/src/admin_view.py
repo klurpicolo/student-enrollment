@@ -22,19 +22,21 @@ class AdminView(BaseView):
 
     def menu(self):
         # TO be implemented
-        admin_choice = input_blue("Admin System (c/g/p/r/s/x): ")
-        if admin_choice == "s":
-            self.viewStudents()
-        elif admin_choice == 'g':
-            self.viewStudentsByGrade()
-        elif admin_choice == 'p':
-            self.filterByPassFail()
-        elif admin_choice == 'r':
-            self.removeStudent()
-        elif admin_choice == 'c':
-            self.clearStudentDataStore()
-        elif admin_choice == 'x':
-            self.logout()
+        
+        while True:
+            admin_choice = input_blue("Admin System (c/g/p/r/s/x): ")
+            if admin_choice == "s":
+                self.viewStudents()
+            elif admin_choice == 'g':
+                self.viewStudentsByGrade()
+            elif admin_choice == 'p':
+                self.filterByPassFail()
+            elif admin_choice == 'r':
+                self.removeStudent()
+            elif admin_choice == 'c':
+                self.clearStudentDataStore()
+            elif admin_choice == 'x':
+                self.logout()
 
     def viewStudents(self):
         students = self.student_repository.get_all_students()
