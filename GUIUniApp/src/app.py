@@ -298,19 +298,26 @@ class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.create_notebook()
-
-    def re_render(self):
-        pass
-
-    def create_notebook(self):
         notebook = ttk.Notebook(self)
         notebook.pack(fill="both", expand=True)
+        self.notebook = notebook
 
-        self.create_show_tab(notebook)
-        self.create_group_tab(notebook)
-        self.create_partition_tab(notebook)
-        self.create_remove_tab(notebook)
+        self.show = self.create_show_tab(notebook)
+        self.group = self.create_group_tab(notebook)
+        self.partition = self.create_partition_tab(notebook)
+        self.remove = self.create_remove_tab(notebook)
+        self.clean = self.create_clean_tab(notebook)
+        self.all_frame = [self.show, self.group, self.partition, self.remove, self.clean]
+
+    def re_render(self):
+        for widget in self.notebook.winfo_children():
+            widget.destroy()
+        self.show = self.create_show_tab(self.notebook)
+        self.group = self.create_group_tab(self.notebook)
+        self.partition = self.create_partition_tab(self.notebook)
+        self.remove = self.create_remove_tab(self.notebook)
+        self.clean = self.create_clean_tab(self.notebook)
+
 
     def create_show_tab(self, notebook):
         show_frame = ttk.Frame(notebook)
@@ -325,6 +332,7 @@ class AdminPage(tk.Frame):
         students = student_repository.get_all_students()
         for student in students:
             tree.insert("", "end", values=(student.id, student.name, student.email))
+        return show_frame
 
     def create_group_tab(self, notebook):
         group_frame = ttk.Frame(notebook)
@@ -354,6 +362,7 @@ class AdminPage(tk.Frame):
             for student in students:
                 tree.insert("", "end", values=(str(grade), student.id, student.name))
 
+        return group_frame
     def create_partition_tab(self, notebook):
         partition_frame = ttk.Frame(notebook)
         notebook.add(partition_frame, text="Partition")
@@ -384,6 +393,8 @@ class AdminPage(tk.Frame):
         for student in failed_student:
             tree.insert("", "end", values=("Failed", student.id, student.name))
 
+        return partition_frame
+
     def create_remove_tab(self, notebook):
         remove_frame = ttk.Frame(notebook)
         notebook.add(remove_frame, text="Remove")
@@ -401,6 +412,7 @@ class AdminPage(tk.Frame):
                 if student_repository.remove_student(student_id):
                     tree.delete(item)  # Remove the selected item from the Treeview
                     messagebox.showinfo("Success", f"Student with ID {student_id} has been removed.")
+                    self.re_render()
                 else:
                     messagebox.showerror("Error", "Failed to remove student.")
 
@@ -417,6 +429,27 @@ class AdminPage(tk.Frame):
 
         # Bind the remove_student function to the Button-1 event (left-click) on the Treeview
         tree.bind("<Button-1>", remove_student)
+
+        return remove_frame
+
+    def create_clean_tab(self, notebook):
+        clean_frame = ttk.Frame(notebook)
+        notebook.add(clean_frame, text="Clean Database")
+
+        clean_button = ttk.Button(clean_frame, text="Clean All Data", command=self.clean_database)
+        clean_button.pack(pady=20)
+
+        return clean_frame
+
+    def clean_database(self):
+        confirmation = messagebox.askyesno("Confirmation", "Are you sure you want to clean all data?")
+        if confirmation:
+            try:
+                student_repository.clean_database()
+                messagebox.showinfo("Success", "All data has been cleaned.")
+                self.re_render()
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to clean data: {str(e)}")
 
 
 if __name__ == "__main__":
