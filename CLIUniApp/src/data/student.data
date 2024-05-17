@@ -36,5 +36,51 @@
                 "grade": "HD"
             }
         ]
+    },
+    {
+        "id": "128119",
+        "name": "Mark",
+        "email": "mark.lee@university.com",
+        "password": "Markleee567",
+        "enrolled_subjects": [
+            {
+                "id": "256",
+                "mark": 46,
+                "grade": "Z"
+            },
+            {
+                "id": "750",
+                "mark": 81,
+                "grade": "D"
+            },
+            {
+                "id": "123",
+                "mark": 90,
+                "grade": "HD"
+            }
+        ]
+    },
+    {
+        "id": "444444",
+        "name": "Mark",
+        "email": "a",
+        "password": "a",
+        "enrolled_subjects": [
+            {
+                "id": "520",
+                "mark": 95,
+                "grade": "HD"
+            },
+            {
+                "id": "256",
+                "mark": 46,
+                "grade": "Z"
+            },
+            {
+                "id": "750",
+                "mark": 81,
+                "grade": "D"
+            }
+        ]
     }
 ]
