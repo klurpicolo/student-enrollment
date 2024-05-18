@@ -91,42 +91,40 @@ class AdminView(BaseView):
     def filterByPassFail(self):
         students = self.student_repository.get_all_students()
         print_yellow("PASS/FAIL Partition")
-        Titles = ['Fail', 'Pass']
-        Pass = []
-        Fail = []
-        PnF = [Fail, Pass]
+        titles = ['Fail', 'Pass']
+        pass_student = []
+        fail_student = []
+        all_student = [fail_student, pass_student]
         for student in students:
-            totalMark = 0
-            courseCount = 0
+            total_mark = 0
+            course_count = 0
             for course in student.enrolled_subjects:
-                totalMark += course.mark
-                courseCount += 1
+                total_mark += course.mark
+                course_count += 1
 
-            if courseCount == 0:
+            if course_count == 0:
                 continue
-            avgMark = totalMark / courseCount
-            avgGrade = Grade.from_mark(avgMark)
-            if avgMark < 50:
-                Fail.append((student, avgMark, avgGrade))
+            avg_mark = total_mark / course_count
+            avg_grade = Grade.from_mark(avg_mark)
+            if avg_mark < 50:
+                fail_student.append((student, avg_mark, avg_grade))
             else:
-                Pass.append((student, avgMark, avgGrade))
+                pass_student.append((student, avg_mark, avg_grade))
 
-        for index, status in enumerate(PnF):
-
-            print_white(Titles[index], ' --> ', end='')
+        for index, status in enumerate(all_student):
+            print_white(titles[index], ' --> ', end='')
             print_white('[', end='', is_indent=False)
-
-            for student, avgMark, avgGrade in status:
-                print_white(f"{student.name} :: {student.id} --> Grade: {avgGrade} - Mark: {avgMark}, ", end='',
+            for student, avg_mark, avg_grade in status:
+                print_white(f"{student.name} :: {student.id} --> Grade: {avg_grade} - Mark: {avg_mark}, ", end='',
                             is_indent=False)
             print_white(']', is_indent=False)
 
     def removeStudent(self):
-        idToRemove = input("Remove by ID: ")
-        if self.student_repository.remove_student(idToRemove) == True:
-            print_yellow("Removing Student " + idToRemove + " Account")
+        id_to_remove = input("Remove by ID: ")
+        if self.student_repository.remove_student(id_to_remove):
+            print_yellow("Removing Student " + id_to_remove + " Account")
         else:
-            print_red("Student " + idToRemove + " does not exist")
+            print_red("Student " + id_to_remove + " does not exist")
 
     def clearStudentDataStore(self):
         print_yellow("Clearing student database")
