@@ -2,7 +2,9 @@ from view import BaseView
 from repository import StudentRepository
 from model import Student, Subject
 from utilities import *
+from validator import validate_password
 import re
+
 
 class StudentView(BaseView):
     """
@@ -15,12 +17,12 @@ class StudentView(BaseView):
         (x) exit
     """
 
-    def __init__(self, student_repository, student = None):
+    def __init__(self, student_repository, student=None):
         self.student_repo: StudentRepository = student_repository
         self.student: Student = student
 
     hint = "Student Course Menu (c/e/r/s/x): "
-    
+
     def menu(self):
         # TO be implemented
         while True:
@@ -41,22 +43,19 @@ class StudentView(BaseView):
         if len(self.student.enrolled_subjects) >= 4:
             print_red("Students are allowed to enroll in 4 subjects only")
             return
-        
-        new_subject = Subject()        
+
+        new_subject = Subject()
         # Testing the case where subject already exists...
         if new_subject not in self.student.enrolled_subjects:
             self.student.enrolled_subjects.append(new_subject)
             print_yellow(f"Enrolling in subject-{new_subject.id}")
             print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
-        
-
 
     def displayEnrolment(self):
-    
+
         print_yellow(f"Showing {len(self.student.enrolled_subjects)} subjects")
         for i, subject in enumerate(self.student.enrolled_subjects):
             print_white(f'[ {subject} ]')
-
 
     def withdrawEnrolment(self):
         withdraw_id = str(input_white("Remove subject by ID: "))
@@ -64,23 +63,10 @@ class StudentView(BaseView):
 
         new_enrol_subject = [s for s in self.student.enrolled_subjects if s.id != withdraw_id]
         self.student.enrolled_subjects = new_enrol_subject
-       
+
         print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
         # print(f'self.student.enrolled_subjects {self.student.enrolled_subjects}')
         self.student_repo.update_student(self.student)
-        
-    def validate_password(self, password):
-        """
-        Will return true if password pattern matches password input.
-        
-        Password:
-        - Start with upper case
-        - Minimum 6 letters
-        - Following by minimum 3-digits
-        """
-        password_pattern = r"^[A-Z][a-zA-Z]{5,}[0-9]{3,}$"
-        return re.match(password_pattern, password)
-        
 
         # new_subject_list = []
         # for subject in student.enrolled_subjects:
@@ -103,10 +89,10 @@ class StudentView(BaseView):
     def changePassword(self):
         print_yellow("Updating password")
         new_password = input_white("New password: ")
-        if not self.validate_password(new_password):
+        if not validate_password(new_password):
             print_red("Incorrect password format")
             return
-        while True: 
+        while True:
             confirm_password = input_white("Confirm password: ")
             if new_password == confirm_password:
                 break

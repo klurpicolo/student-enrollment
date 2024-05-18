@@ -1,10 +1,9 @@
 from view import BaseView
 from student_view import StudentView
-from admin_view import AdminView
 from repository import StudentRepository
-from model import Admin, Student
+from model import Student
 import utilities as utils
-import re
+from validator import validate_password, validate_email
 
 
 class StudentLoginView(BaseView):
@@ -52,11 +51,11 @@ class StudentLoginView(BaseView):
                 if student.email == email and student.password == password:
                     is_login_fail = False
                     StudentView(self.student_repository, student).menu()
-            
+
     def register(self):
         utils.print_green("Student Sign Up")
         students = self.student_repository.get_all_students()
-        existing_emails = [student.email for student in students] # our iterator
+        existing_emails = [student.email for student in students]  # our iterator
 
         while True:
             input_email = utils.input_white("Email: ")
@@ -72,45 +71,21 @@ class StudentLoginView(BaseView):
                         utils.print_red(f"Student {iter_name} already exists")
                         student_exists = True
                 # If student doesn't exist, after checking for all students...
-                if student_exists == False:
+                if not student_exists:
                     fullname = utils.input_white("Name: ")
                     utils.print_yellow(f"Enrolling Student {fullname}")
                     student_to_store = Student(fullname, input_email, input_password)
                     self.student_repository.add_student(student_to_store)
                     break
-                
-            
-    def validate_email(self, email):
-        """
-        Will return true if email pattern matches email input.
-        
-        Email:
-        - Contains '@university.com'
-        """
-        email_pattern = r"^[a-zA-Z]+[.][a-zA-Z]+@university[.]com$"
-        return re.match(email_pattern, email)
-    
-    def validate_password(self, password):
-        """
-        Will return true if password pattern matches password input.
-        
-        Password:
-        - Start with upper case
-        - Minimum 6 letters
-        - Following by minimum 3-digits
-        """
-        password_pattern = r"^[A-Z][a-zA-Z]{5,}[0-9]{3,}$"
-        return re.match(password_pattern, password)
 
     def validate_credentials(self, email, password):
-
-        if (self.validate_email(email) and self.validate_password(password)):
+        if validate_email(email) and validate_password(password):
             utils.print_yellow("email and password formats acceptable")
             return True
         else:
             utils.print_red("Incorrect email or password format")
             return False
-    
+
     def check_email_exists(self, email, password):
         students = self.student_repository.get_all_students()
         for student in students:
