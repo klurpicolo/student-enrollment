@@ -55,14 +55,17 @@ class StudentView:
 
     def withdrawEnrolment(self):
         withdraw_id = str(input_white("Remove subject by ID: "))
-        print_yellow(f'Dropping subject-{withdraw_id}')
 
+        is_exist = withdraw_id in [sub.id for sub in self.student.enrolled_subjects]
+        if not is_exist:
+            print_red(f"Invalid subject ID {withdraw_id}")
+            return
+
+        print_yellow(f'Dropping subject-{withdraw_id}')
         new_enrol_subject = [s for s in self.student.enrolled_subjects if s.id != withdraw_id]
         self.student.enrolled_subjects = new_enrol_subject
-
-        print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
-        # print(f'self.student.enrolled_subjects {self.student.enrolled_subjects}')
         self.student_repo.update_student(self.student)
+        print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
 
     def changePassword(self):
         print_yellow("Updating password")
