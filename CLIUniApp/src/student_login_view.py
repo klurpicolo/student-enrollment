@@ -49,13 +49,11 @@ class StudentLoginView(BaseView):
         else:
             for student in all_students:
                 if student.email == email and student.password == password:
-                    is_login_fail = False
                     StudentView(self.student_repository, student).menu()
 
     def register(self):
         utils.print_green("Student Sign Up")
         students = self.student_repository.get_all_students()
-        existing_emails = [student.email for student in students]  # our iterator
 
         while True:
             input_email = utils.input_white("Email: ")
