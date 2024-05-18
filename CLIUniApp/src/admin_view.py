@@ -21,8 +21,6 @@ class AdminView(BaseView):
         self.student_repository = student_repository
 
     def menu(self):
-        # TO be implemented
-        
         while True:
             admin_choice = input_blue("Admin System (c/g/p/r/s/x): ")
             if admin_choice == "s":
@@ -36,7 +34,7 @@ class AdminView(BaseView):
             elif admin_choice == 'c':
                 self.clearStudentDataStore()
             elif admin_choice == 'x':
-                self.logout()
+                break
 
     def viewStudents(self):
         students = self.student_repository.get_all_students()

@@ -1,10 +1,10 @@
-from view import BaseView
 from admin_view import AdminView
 from student_login_view import StudentLoginView
 from utilities import *
+import sys
 
 
-class UniversityView(BaseView):
+class UniversityView:
     """
     The University System
     The university menu system should enable users to choose to go the Admin menu or Student Menu
@@ -31,3 +31,7 @@ class UniversityView(BaseView):
                     self.logout()
                 case _:
                     print_red(f"The choice {choice} is not one of A, S, X). Please select a new valid choice.", is_indent=False)
+
+    def logout(self):
+        print_yellow('Thank you', is_indent=False)
+        sys.exit(0)

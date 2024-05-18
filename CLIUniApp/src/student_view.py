@@ -1,12 +1,10 @@
-from view import BaseView
 from repository import StudentRepository
 from model import Student, Subject
 from utilities import *
 from validator import validate_password
-import re
 
 
-class StudentView(BaseView):
+class StudentView:
     """
     The Student Course System
     Logged in students can access this menu to perform the following actions:
@@ -17,19 +15,18 @@ class StudentView(BaseView):
         (x) exit
     """
 
-    def __init__(self, student_repository, student=None):
+    def __init__(self, student_repository, student: Student = None):
         self.student_repo: StudentRepository = student_repository
         self.student: Student = student
 
     hint = "Student Course Menu (c/e/r/s/x): "
 
     def menu(self):
-        # TO be implemented
         while True:
             choice = input_blue(self.hint)
             match choice:
                 case "x":
-                    self.logout()
+                    break
                 case "e":
                     self.enrolSubject()
                 case "r":
@@ -45,14 +42,13 @@ class StudentView(BaseView):
             return
 
         new_subject = Subject()
-        # Testing the case where subject already exists...
         if new_subject not in self.student.enrolled_subjects:
             self.student.enrolled_subjects.append(new_subject)
+            self.student_repo.update_student(self.student)
             print_yellow(f"Enrolling in subject-{new_subject.id}")
             print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
 
     def displayEnrolment(self):
-
         print_yellow(f"Showing {len(self.student.enrolled_subjects)} subjects")
         for i, subject in enumerate(self.student.enrolled_subjects):
             print_white(f'[ {subject} ]')
@@ -67,24 +63,6 @@ class StudentView(BaseView):
         print_yellow(f"You are now enrolled in {len(self.student.enrolled_subjects)} out of 4 subjects")
         # print(f'self.student.enrolled_subjects {self.student.enrolled_subjects}')
         self.student_repo.update_student(self.student)
-
-        # new_subject_list = []
-        # for subject in student.enrolled_subjects:
-        #     if withdraw_id == subject.id:
-        #         continue
-
-        #     new_subject_list.append(subject)
-        #     print("Subject ID does not exist in enrolment list.")
-
-        # if withdraw_id not in student.enrolled_subjects:
-        # else:
-        #     new_subject_list = []
-        #     for subject in student.enrolled_subjects:
-        #         if subject.id == withdraw_id:
-        #             continue
-        #         else:
-        #             new_subject_list.append(subject)
-        #             print(f"Have successfully withdrawn from {subject}")
 
     def changePassword(self):
         print_yellow("Updating password")
@@ -106,11 +84,11 @@ class StudentView(BaseView):
 
 
 if __name__ == "__main__":
-    repo = StudentRepository("asds")
-    student = Student("George", "asd@gmail.com", "1234")
-    repo.add_student(student)
+    repo2 = StudentRepository("asds")
+    student2 = Student("George", "asd@gmail.com", "1234")
+    repo2.add_student(student2)
     student_view = StudentView(
-        student_repository=repo,
-        student=student
+        student_repository=repo2,
+        student=student2
     )
     student_view.menu()

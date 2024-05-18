@@ -1,4 +1,3 @@
-from view import BaseView
 from student_view import StudentView
 from repository import StudentRepository
 from model import Student
@@ -6,7 +5,7 @@ import utilities as utils
 from validator import validate_password, validate_email
 
 
-class StudentLoginView(BaseView):
+class StudentLoginView:
     """
     The Student System
     The student menu system should enable students to Login and Register as follows:
@@ -30,9 +29,9 @@ class StudentLoginView(BaseView):
                 case "r":
                     self.register()
                 case "x":
-                    self.logout()
+                    break
                 case _:
-                    print(f"The choice {choice} is not one of (L, R, X). Please select a new valid choice.")
+                    utils.print_red(f"The choice {choice} is not one of (L, R, X). Please select a new valid choice.")
 
     def login(self):
         utils.print_green("Student Sign In")
