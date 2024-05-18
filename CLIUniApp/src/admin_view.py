@@ -4,7 +4,6 @@ from model import Grade
 from utilities import *
 
 
-# Mark is working on this
 class AdminView(BaseView):
     """
     The Admin System
@@ -146,15 +145,15 @@ if __name__ == "__main__":
         print(f"Student id {student.id}")
     print(students)'''
 
-    admin_view = AdminView(stu_re)
-    admin_choice = input_blue("Admin System (c/g/p/r/s/x): ")
-    if admin_choice == "s":
-        admin_view.viewStudents()
-    elif admin_choice == 'g':
-        admin_view.viewStudentsByGrade()
-    elif admin_choice == 'p':
-        admin_view.filterByPassFail()
-    elif admin_choice == 'r':
-        admin_view.removeStudent()
-    elif admin_choice == 'c':
-        admin_view.clearStudentDataStore()
+    admin_view2 = AdminView(stu_re)
+    admin_choice2 = input_blue("Admin System (c/g/p/r/s/x): ")
+    if admin_choice2 == "s":
+        admin_view2.viewStudents()
+    elif admin_choice2 == 'g':
+        admin_view2.viewStudentsByGrade()
+    elif admin_choice2 == 'p':
+        admin_view2.filterByPassFail()
+    elif admin_choice2 == 'r':
+        admin_view2.removeStudent()
+    elif admin_choice2 == 'c':
+        admin_view2.clearStudentDataStore()

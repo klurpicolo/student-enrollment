@@ -82,9 +82,6 @@ class StudentView:
         self.student.password = new_password
         self.student_repo.update_student(self.student)
 
-    def exit(self):
-        pass
-
 
 if __name__ == "__main__":
     repo2 = StudentRepository("asds")
