@@ -17,8 +17,12 @@ class StudentRepository:
         raise FileNotFoundError(self.file_path)
 
     def save_students(self, students):
-        with open(self.file_path, 'w') as file:
-            json.dump(students, file, indent=4)
+        try:
+            with open(self.file_path, 'w') as file:
+                json.dump(students, file, indent=4)
+        except FileNotFoundError:
+            with open(self.file_path, 'w+') as file:
+                json.dump([], file, indent=4)
 
     def get_all_students(self) -> list[Student]:
         return [Student.deserialize(student_dict) for student_dict in self.load_students()]
