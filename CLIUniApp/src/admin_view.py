@@ -1,10 +1,9 @@
-from view import BaseView
 from repository import StudentRepository
 from model import Grade
 from utilities import *
 
 
-class AdminView(BaseView):
+class AdminView:
     """
     The Admin System
     Admin menu offers the following actions:
